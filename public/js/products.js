@@ -27,7 +27,7 @@ const products = [
     "id": 7,
     "name": "ииввииыивыивы",
     "price": 125.0,
-    "image": "public/img/products/vlcsnap-2024-09-11-18h51m58s188.png"
+    "image": "public/img/products/vlcsnap-2025-09-23-15h41m36s133_yz9Iwpp.png"
   },
   {
     "id": 8,
@@ -46,6 +46,24 @@ const products = [
     "name": "товар очень  хороший",
     "price": 550.0,
     "image": "public/img/products/vlcsnap-2024-09-11-18h41m06s460_8EZ6lTs.png"
+  },
+  {
+    "id": 12,
+    "name": "товары  для  проверки",
+    "price": 800.0,
+    "image": "public/img/products/vlcsnap-2025-09-23-15h41m36s133.png"
+  },
+  {
+    "id": 13,
+    "name": "работа  сайта",
+    "price": 550.0,
+    "image": "public/img/products/vlcsnap-2025-09-23-15h41m36s133_REjQLGu.png"
+  },
+  {
+    "id": 14,
+    "name": "правильные  товары",
+    "price": 950.0,
+    "image": "public/img/products/vlcsnap-2024-09-11-18h39m53s302_0H426FV.png"
   }
 ];
 
