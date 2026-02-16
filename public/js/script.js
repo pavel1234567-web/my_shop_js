@@ -1,31 +1,109 @@
+// Импорт массива товаров
 import products from "./products.js";
 
+// Импорт функции инициализации слайдера цены
+import { initPriceSlider } from "./priceSlider.js";
+
+// Импорт функции сортировки
+import { initSortByPrice } from "./sortProducts.js";
+
+// Контейнер, куда будут выводиться карточки товаров
 const container = document.getElementById("products");
+
+// Создаём контейнер для пагинации (кнопки страниц)
 const paginationContainer = document.createElement("nav");
 paginationContainer.className = "my-4";
+
+// Добавляем блок пагинации после списка товаров
 container.parentNode.appendChild(paginationContainer);
 
-let itemsPerPage = getItemsPerPage();
+
+// ================= ПЕРЕМЕННЫЕ СОСТОЯНИЯ =================
+
+// Текущий текст поиска
+let currentSearch = "";
+
+// Минимальная цена фильтра
+let currentMin = 0;
+
+// Максимальная цена фильтра
+let currentMax = Infinity;
+
+// Текущий тип сортировки (default / asc / desc)
+let currentSort = "default";
+
+// Текущая страница
 let currentPage = 1;
 
-// --- адаптивное количество карточек ---
+// Количество товаров на странице (зависит от ширины экрана)
+let itemsPerPage = getItemsPerPage();
+
+
+// ================= ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ =================
+function updateProducts() {
+
+  // Фильтруем товары
+  let result = products.filter(p => {
+
+    // Проверка по цене
+    const matchesPrice =
+      p.price >= currentMin && p.price <= currentMax;
+
+    // Проверка по поиску (по названию или цене или артикулу)
+    const matchesSearch =
+      currentSearch === "" ||
+      p.name.toLowerCase().includes(currentSearch) ||
+      p.price.toString().includes(currentSearch)||
+      (p.article && p.article.toLowerCase().includes(currentSearch)); // поиск по артикулу
+
+    // Возвращаем только те товары, которые подходят под оба условия
+    return matchesPrice && matchesSearch;
+  });
+
+  // Сортировка по возрастанию цены
+  if (currentSort === "asc") {
+    result.sort((a, b) => a.price - b.price);
+  }
+
+  // Сортировка по убыванию цены
+  if (currentSort === "desc") {
+    result.sort((a, b) => b.price - a.price);
+  }
+
+  // Отрисовываем текущую страницу
+  renderPage(currentPage, result);
+}
+
+
+// ================= АДАПТИВ (СКОЛЬКО ТОВАРОВ НА СТРАНИЦЕ) =================
 function getItemsPerPage() {
+
   const width = window.innerWidth;
+
+  // Маленькие телефоны
   if (width < 576) return 2;
+
+  // Телефоны
   if (width < 768) return 2;
+
+  // Планшеты
   if (width < 992) return 3;
+
+  // Десктоп
   return 4;
 }
 
-// --- создаём карточку ---
+
+// ================= СОЗДАНИЕ КАРТОЧКИ ТОВАРА =================
 function createCard(p) {
   return `
-    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 list-item d-flex">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
       <div class="card h-100 shadow-sm w-100">
         <img src="${p.image}" class="card-img-top img-fluid" alt="${p.name}">
         <div class="card-body">
-          <h5 class="card-title name">${p.name}</h5>
-          <p class="card-text text-success fw-bold price" data-price="${p.price}">${p.price} грн</p>
+          <h5 class="card-title">${p.name}</h5>
+          <p class="card-text text-muted">Артикул: ${p.article}</p>
+          <p class="card-text text-success fw-bold">${p.price} грн</p>
         </div>
       </div>
     </div>
@@ -33,76 +111,147 @@ function createCard(p) {
 }
 
 
-// --- рендер страницы ---
-function renderPage(page, listData = products) {
-  const start = (page - 1) * itemsPerPage;
+// ================= РЕНДЕР СТРАНИЦЫ =================
+function renderPage(page, listData) {
+
+  // Считаем общее количество страниц
+  const totalPages = Math.ceil(listData.length / itemsPerPage);
+
+  // Если текущая страница больше допустимой — сбрасываем на 1
+  if (page > totalPages) currentPage = 1;
+
+  // Определяем с какого элемента начинать
+  const start = (currentPage - 1) * itemsPerPage;
+
+  // До какого элемента показывать
   const end = start + itemsPerPage;
-  container.innerHTML = listData.slice(start, end).map(createCard).join("");
+
+  // Вставляем нужную часть массива в HTML
+  container.innerHTML = listData
+    .slice(start, end)
+    .map(createCard)
+    .join("");
+
+  // Обновляем пагинацию
   renderPagination(listData);
 }
 
-// --- пагинация ---
-function renderPagination(listData = products) {
+
+// ================= ПАГИНАЦИЯ =================
+function renderPagination(listData) {
+
   const totalPages = Math.ceil(listData.length / itemsPerPage);
-  let html = '<ul class="pagination justify-content-center">';
 
-  html += `<li class="page-item ${currentPage === 1 ? "disabled" : ""}">
-            <a class="page-link" href="#" data-page="${currentPage - 1}">Предыдущая</a>
-          </li>`;
-
-  for (let i = 1; i <= totalPages; i++) {
-    html += `<li class="page-item ${i === currentPage ? "active" : ""}">
-               <a class="page-link" href="#" data-page="${i}">${i}</a>
-             </li>`;
+  // Если всего одна страница — пагинацию не показываем
+  if (totalPages <= 1) {
+    paginationContainer.innerHTML = "";
+    return;
   }
 
-  html += `<li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
-            <a class="page-link" href="#" data-page="${currentPage + 1}">Следующая</a>
-          </li>`;
+  let html = '<ul class="pagination justify-content-center">';
+
+  // ----- КНОПКА НАЗАД -----
+  html += `
+    <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+      <a class="page-link" href="#" data-page="${currentPage - 1}">
+        Назад
+      </a>
+    </li>
+  `;
+
+  // ----- НОМЕРА СТРАНИЦ -----
+  for (let i = 1; i <= totalPages; i++) {
+    html += `
+      <li class="page-item ${i === currentPage ? "active" : ""}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>
+    `;
+  }
+
+  // ----- КНОПКА ВПЕРЁД -----
+  html += `
+    <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+      <a class="page-link" href="#" data-page="${currentPage + 1}">
+        Вперед
+      </a>
+    </li>
+  `;
+
   html += "</ul>";
 
   paginationContainer.innerHTML = html;
 
-  paginationContainer.querySelectorAll("a.page-link").forEach(link => {
-    link.addEventListener("click", e => {
+  // Обработчик клика по страницам
+  paginationContainer.querySelectorAll("a.page-link").forEach((link) => {
+    link.addEventListener("click", (e) => {
+
       e.preventDefault();
-      const page = parseInt(link.getAttribute("data-page"));
+
+      const page = parseInt(link.dataset.page);
+
+      // Проверяем корректность страницы
       if (page >= 1 && page <= totalPages) {
         currentPage = page;
-        renderPage(currentPage, window.filteredProducts || products);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        updateProducts();
+
+        // Плавная прокрутка вверх
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     });
   });
 }
 
-// --- resize ---
+
+// ================= ПОИСК =================
+
+// Создаём поле поиска динамически
+const searchInput = document.createElement("input");
+searchInput.type = "text";
+searchInput.placeholder = "Поиск по названию, цене или артикулу...";
+searchInput.className = "form-control mb-3 w-50 mx-auto";
+
+// Вставляем поле перед списком товаров
+container.parentNode.insertBefore(searchInput, container);
+
+// Обработчик ввода
+searchInput.addEventListener("input", () => {
+  currentSearch = searchInput.value.toLowerCase().trim();
+  currentPage = 1;
+  updateProducts();
+});
+
+
+// ================= ИНИЦИАЛИЗАЦИЯ ФИЛЬТРОВ =================
+
+// Слайдер цены
+initPriceSlider(products, (min, max) => {
+  currentMin = min;
+  currentMax = max;
+  currentPage = 1;
+  updateProducts();
+});
+
+// Сортировка
+initSortByPrice(products, () => {
+  currentSort = document.getElementById("sortPrice").value;
+  currentPage = 1;
+  updateProducts();
+});
+
+
+// ================= ОТСЛЕЖИВАНИЕ ИЗМЕНЕНИЯ РАЗМЕРА ЭКРАНА =================
 window.addEventListener("resize", () => {
-  const newItemsPerPage = getItemsPerPage();
-  if (newItemsPerPage !== itemsPerPage) {
-    itemsPerPage = newItemsPerPage;
+
+  const newItems = getItemsPerPage();
+
+  // Если количество карточек изменилось — перерисовываем
+  if (newItems !== itemsPerPage) {
+    itemsPerPage = newItems;
     currentPage = 1;
-    renderPage(currentPage, window.filteredProducts || products);
+    updateProducts();
   }
 });
 
-// --- поиск ---
-const searchInput = document.createElement("input");
-searchInput.type = "text";
-searchInput.placeholder = "Поиск по названию или цене...";
-searchInput.className = "form-control mb-3";
-container.parentNode.insertBefore(searchInput, container);
 
-window.filteredProducts = products; // глобальный фильтр для пагинации
-
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase();
-  window.filteredProducts = products.filter(
-    p => p.name.toLowerCase().includes(query) || p.price.toString().includes(query)
-  );
-  currentPage = 1;
-  renderPage(currentPage, window.filteredProducts);
-});
-
-// --- стартовая отрисовка ---
-renderPage(currentPage);
+// ================= ЗАПУСК ПРИ ЗАГРУЗКЕ =================
+updateProducts();
