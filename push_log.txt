@@ -42,3 +42,19 @@ To https://github.com/pavel1234567-web/my_shop_js.git
 =============================== 
 16.02.2026 16:56:13,93 
 Начало авто-обновления проекта 
+warning: in the working copy of 'push_log.txt', LF will be replaced by CRLF the next time Git touches it
+[main 43d16fc] auto_commit 16-02-2026_16-56
+ 11 files changed, 340 insertions(+), 120 deletions(-)
+ create mode 100644 public/img/products/20180915_113204_000019_vGl2JXH.png
+ create mode 100644 public/img/products/20180915_113204_000019_wEEAFLV.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h39m53s302_UaZyUyO.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h39m53s302_VOO1h7O.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h40m58s850.png
+ create mode 100644 public/js/priceSlider.js
+ create mode 100644 public/js/sortProducts.js
+To https://github.com/pavel1234567-web/my_shop_js.git
+   3fb18da..43d16fc  main -> main
+✔ Обновление завершено 
+=============================== 
+16.02.2026 17:36:04,72 
+Начало авто-обновления проекта 
