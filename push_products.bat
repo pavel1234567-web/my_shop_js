@@ -21,7 +21,7 @@ git add . >> %LOGFILE% 2>&1
 
 REM Создаём коммит с датой и временем
 for /f "tokens=1-5 delims=:. " %%a in ("%date% %time%") do set datetime=%%a-%%b-%%c_%%d-%%e
-git commit -m "Авто-обновление проекта %datetime%" >> %LOGFILE% 2>&1
+git commit -m "auto_commit %datetime%" >> %LOGFILE% 2>&1
 
 REM Пушим изменения на GitHub
 git push origin main >> %LOGFILE% 2>&1
