@@ -17,7 +17,6 @@ paginationContainer.className = "my-4";
 // Добавляем блок пагинации после списка товаров
 container.parentNode.appendChild(paginationContainer);
 
-
 // ================= ПЕРЕМЕННЫЕ СОСТОЯНИЯ =================
 
 // Текущий текст поиска
@@ -38,26 +37,25 @@ let currentPage = 1;
 // Количество товаров на странице (зависит от ширины экрана)
 let itemsPerPage = getItemsPerPage();
 
-
 // ================= ГЛАВНАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ =================
 function updateProducts() {
-
   // Фильтруем товары
-  let result = products.filter(p => {
-
+  let result = products.filter((p) => {
     // Проверка по цене
-    const matchesPrice =
-      p.price >= currentMin && p.price <= currentMax;
+    const matchesPrice = p.price >= currentMin && p.price <= currentMax;
 
     // Проверка по поиску (по названию или цене или артикулу)
     const matchesSearch =
       currentSearch === "" ||
       p.name.toLowerCase().includes(currentSearch) ||
-      p.price.toString().includes(currentSearch)||
+      p.price.toString().includes(currentSearch) ||
       (p.article && p.article.toLowerCase().includes(currentSearch)); // поиск по артикулу
 
+    const matchesCategory =
+      !categoryFilter.value || p.category === categoryFilter.value;
+
     // Возвращаем только те товары, которые подходят под оба условия
-    return matchesPrice && matchesSearch;
+    return matchesPrice && matchesSearch && matchesCategory;
   });
 
   // Сортировка по возрастанию цены
@@ -74,10 +72,8 @@ function updateProducts() {
   renderPage(currentPage, result);
 }
 
-
 // ================= АДАПТИВ (СКОЛЬКО ТОВАРОВ НА СТРАНИЦЕ) =================
 function getItemsPerPage() {
-
   const width = window.innerWidth;
 
   // Маленькие телефоны
@@ -93,7 +89,6 @@ function getItemsPerPage() {
   return 4;
 }
 
-
 // ================= СОЗДАНИЕ КАРТОЧКИ ТОВАРА =================
 function createCard(p) {
   return `
@@ -102,18 +97,38 @@ function createCard(p) {
         <img src="${p.image}" class="card-img-top img-fluid" alt="${p.name}">
         <div class="card-body">
           <h5 class="card-title">${p.name}</h5>
+          <p class="card-text text-muted">Описание: ${p.description}</p>
           <p class="card-text text-muted">Артикул: ${p.article}</p>
           <p class="card-text text-success fw-bold">${p.price} грн</p>
+          <p class="card-text text-success fw-bold">${p.category} </p>
+
         </div>
       </div>
     </div>
   `;
 }
 
+const categoryFilter = document.getElementById("categoryFilter");
+
+// Получаем все уникальные категории из массива товаров
+function initCategories() {
+  const categories = [...new Set(products.map((p) => p.category))];
+  categories.forEach((cat) => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
+}
+
+// Добавляем фильтрацию по категории
+categoryFilter.addEventListener("change", () => {
+  currentPage = 1;
+  updateProducts();
+});
 
 // ================= РЕНДЕР СТРАНИЦЫ =================
 function renderPage(page, listData) {
-
   // Считаем общее количество страниц
   const totalPages = Math.ceil(listData.length / itemsPerPage);
 
@@ -127,19 +142,14 @@ function renderPage(page, listData) {
   const end = start + itemsPerPage;
 
   // Вставляем нужную часть массива в HTML
-  container.innerHTML = listData
-    .slice(start, end)
-    .map(createCard)
-    .join("");
+  container.innerHTML = listData.slice(start, end).map(createCard).join("");
 
   // Обновляем пагинацию
   renderPagination(listData);
 }
 
-
 // ================= ПАГИНАЦИЯ =================
 function renderPagination(listData) {
-
   const totalPages = Math.ceil(listData.length / itemsPerPage);
 
   // Если всего одна страница — пагинацию не показываем
@@ -184,7 +194,6 @@ function renderPagination(listData) {
   // Обработчик клика по страницам
   paginationContainer.querySelectorAll("a.page-link").forEach((link) => {
     link.addEventListener("click", (e) => {
-
       e.preventDefault();
 
       const page = parseInt(link.dataset.page);
@@ -200,7 +209,6 @@ function renderPagination(listData) {
     });
   });
 }
-
 
 // ================= ПОИСК =================
 
@@ -220,7 +228,6 @@ searchInput.addEventListener("input", () => {
   updateProducts();
 });
 
-
 // ================= ИНИЦИАЛИЗАЦИЯ ФИЛЬТРОВ =================
 
 // Слайдер цены
@@ -238,10 +245,8 @@ initSortByPrice(products, () => {
   updateProducts();
 });
 
-
 // ================= ОТСЛЕЖИВАНИЕ ИЗМЕНЕНИЯ РАЗМЕРА ЭКРАНА =================
 window.addEventListener("resize", () => {
-
   const newItems = getItemsPerPage();
 
   // Если количество карточек изменилось — перерисовываем
@@ -252,6 +257,6 @@ window.addEventListener("resize", () => {
   }
 });
 
-
 // ================= ЗАПУСК ПРИ ЗАГРУЗКЕ =================
+initCategories();
 updateProducts();
