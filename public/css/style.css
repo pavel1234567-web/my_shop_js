@@ -1,0 +1,293 @@
+/* Простая анимация кнопки */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.bg_image_main {
+  background-image: url(../img/bg_image.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+}
+
+.slick-prev,
+.slick-next {
+  z-index: 1000;
+  width: 45px;
+  height: 45px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 35px;
+  color: rgb(47, 67, 220);
+}
+
+/* базовые точки */
+.slick-dots li button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgb(4, 42, 230);
+  margin-right: 25px;
+}
+
+.slick-dots li button:before {
+  content: none !important;
+}
+
+.slick-dots li.slick-active button {
+  background: rgb(235, 11, 11);
+  opacity: 1;
+}
+
+/* Для мобильного */
+@media (max-width: 576px) {
+  .slick-dots li button {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgb(120, 232, 21);
+  }
+
+  .slick-dots li.slick-active button {
+    background: rgb(235, 11, 11);
+  }
+}
+
+.navbar-nav .nav-link.active {
+  border-bottom: 3px solid #ffc107;
+  padding-bottom: 5px;
+}
+
+/* Для темного фона можно использовать белую линию */
+.navbar-dark .navbar-nav .nav-link.active {
+  border-bottom: 3px solid white;
+}
+
+/* Простая анимация кнопки */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.bg_image_catalog {
+  background-image: url(../img/bg_catalog.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Простая анимация кнопки */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.bg_contacts {
+  background-image: url(../img/bg_contacts.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Подчеркивание при наведении */
+.navbar-nav .nav-link {
+  position: relative;
+  transition: color 0.3s ease;
+  color: white;
+}
+
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffc107;
+}
+
+/* Для активной страницы подчеркивание всегда видно */
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+  background-color: #ffc107; /* желтый цвет для активной страницы */
+}
+
+/* Отзывы */
+
+.carousel {
+  position: relative;
+  max-width: 1250px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.carousel-track-wrapper {
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  background-color: aqua;
+}
+
+.review-card {
+  width: 30%;
+  min-width: 250px;
+  padding: 20px;
+  background: #cee9a8;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.review-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgb(128, 214, 102);
+  color: rgb(206, 51, 51);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.left {
+  left: 10px;
+}
+.right {
+  right: 10px;
+}
+
+.carousel-dots {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.carousel-dots span {
+  height: 10px;
+  width: 10px;
+  margin: 15px;
+  display: inline-block;
+  background: rgb(233, 22, 22);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.carousel-dots .active {
+  background: black;
+}
+
+#carouselTrack {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Страница  доставка */
+
+body {
+  background-color: #f0f2f5;
+}
+
+.page-header {
+  background: linear-gradient(90deg, #4e54c8, #8f94fb);
+  color: #fff;
+  padding: 2rem 1rem;
+  text-align: center;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4e54c8;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.list-group-item {
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* График */
+
+body {
+  background-color: #f8f9fa;
+}
+.chart-card {
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.chart-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #343a40;
+}

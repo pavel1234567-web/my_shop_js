@@ -68,6 +68,13 @@ function updateProducts() {
     result.sort((a, b) => b.price - a.price);
   }
 
+  // Сортировка по акции (товары по акции вверх)
+  if (currentSort === "sale") {
+    result.sort((a, b) => {
+      return (b.is_sale === true) - (a.is_sale === true);
+    });
+  }
+
   // Отрисовываем текущую страницу
   renderPage(currentPage, result);
 }
@@ -90,23 +97,193 @@ function getItemsPerPage() {
 }
 
 // ================= СОЗДАНИЕ КАРТОЧКИ ТОВАРА =================
+// function createCard(p) {
+//   const words = p.description.split(" ");
+//   const shortText = words.slice(0, 5).join(" ");
+//   const isLong = words.length > 5;
+
+//   return `
+//     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
+//       <div class="card h-100 shadow-sm w-100">
+//         <img src="${p.image}" class="card-img-top img-fluid" alt="${p.name}">
+//         <div class="card-body">
+//           <h5 class="card-title">${p.name}</h5>
+
+//           <p class="card-text text-muted">
+//             Описание:
+//             <span class="description-text">
+//               ${isLong ? shortText + "..." : p.description}
+//             </span>
+//             ${
+//               isLong
+//                 ? `<button class="btn btn-success p-1 ms-1 toggle-btn"
+//                      data-full="${p.description}"
+//                      data-short="${shortText}..."
+//                    >
+//                      Подробнее
+//                    </button>`
+//                 : ""
+//             }
+//           </p>
+
+//           <p class="card-text text-muted">Артикул: ${p.article}</p>
+//           <p class="card-text text-success fw-bold">${p.price} грн</p>
+//           <p class="card-text text-success fw-bold">${p.category} </p>
+
+//         </div>
+//       </div>
+//     </div>
+//   `;
+// }
+
+// document.addEventListener("click", function (e) {
+//   if (e.target.classList.contains("toggle-btn")) {
+//     const btn = e.target;
+//     const textSpan = btn.previousElementSibling;
+
+//     if (btn.textContent === "Подробнее") {
+//       textSpan.textContent = btn.dataset.full;
+//       btn.textContent = "Скрыть";
+//     } else {
+//       textSpan.textContent = btn.dataset.short;
+//       btn.textContent = "Подробнее";
+//     }
+//   }
+// });
+
 function createCard(p) {
+  const description = p.description || "";
+  const words = description.split(" ");
+  const shortText = words.slice(0, 5).join(" ");
+  const isLong = words.length > 5;
+
+  // 🔥 Цена с учетом акции
+  const saleHtml = p.is_sale
+    ? `<div class="d-flex flex-column ">  <span class="badge bg-danger me-2">Акция ${p.sale_percent}%</span>
+       <span class="fw-bold text-success p-3 text-center">Стоимость новая: ${p.sale_price} грн</span>
+       <span class="text-danger text-decoration-line-through text-center">Стоимость старая:${p.price} грн</span> </div>`
+    : `<span class="fw-bold text-success">${p.price} грн</span>  `;
+
+  // 🔥 Генерация HTML для отзывов
+  const reviewsHtml = (p.reviews || [])
+    .filter((r) => r.text && r.text.trim() !== "")
+    .map((r, index) => {
+      const words = r.text.split(" ");
+      const isLongReview = words.length > 10;
+      const shortTextReview = words.slice(0, 10).join(" ");
+      const usernameHtml = r.username ? `<strong>${r.username}:</strong>` : "";
+
+      return `
+      <div class="review mb-2 ">
+        ${usernameHtml}
+        <span class="review-text" id="review-text-${p.id}-${index}">
+          ${isLongReview ? shortTextReview + "..." : r.text}
+        </span>
+        ${
+          isLongReview
+            ? `<button class="btn btn-sm btn-primary ms-1 toggle-review-btn"
+                        data-full="${r.text}"
+                        data-short="${shortTextReview + "..."}"
+                        data-target="review-text-${p.id}-${index}"
+                        data-expanded="false">
+                        Подробнее </button>`
+            : ""
+        }
+      </div>
+    `;
+    })
+    .join("");
+
   return `
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex">
       <div class="card h-100 shadow-sm w-100">
         <img src="${p.image}" class="card-img-top img-fluid" alt="${p.name}">
         <div class="card-body">
           <h5 class="card-title">${p.name}</h5>
-          <p class="card-text text-muted">Описание: ${p.description}</p>
-          <p class="card-text text-muted">Артикул: ${p.article}</p>
-          <p class="card-text text-success fw-bold">${p.price} грн</p>
-          <p class="card-text text-success fw-bold">${p.category} </p>
+
+          <p class="card-text text-muted">
+            Описание: 
+            <span class="description-text">
+              ${isLong ? shortText + "..." : description}
+            </span>
+            ${
+              isLong
+                ? `<button class="btn btn-success p-1 ms-1 toggle-btn"
+                     data-full="${description}"
+                     data-short="${shortText + "..."}"
+                     data-expanded="false"
+                   >
+                     Подробнее
+                   </button>`
+                : ""
+            }
+          </p>
+
+          <p class="card-text text-muted">Артикул: ${p.article || "-"}</p>
+          <p class="card-text">${saleHtml}</p>
+          <p class="card-text text-success fw-bold">Категория: ${p.category || "-"}</p>
+
+          <!-- 🔥 Блок отзывов -->
+          <div class="reviews mt-3 border border-success p-3">
+            <h6>Отзывы:</h6>
+            ${reviewsHtml || "<p class='text-muted'>Нет отзывов</p>"}
+
+          </div>
+          
 
         </div>
       </div>
     </div>
   `;
 }
+
+// 🔹 JS для кнопок "Подробнее" у отзывов
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("toggle-review-btn")) {
+    const btn = e.target;
+    const targetId = btn.dataset.target;
+    const span = document.getElementById(targetId);
+    const expanded = btn.dataset.expanded === "true";
+
+    if (expanded) {
+      span.textContent = btn.dataset.short;
+      btn.dataset.expanded = "false";
+      btn.textContent = "Подробнее";
+    } else {
+      span.textContent = btn.dataset.full;
+      btn.dataset.expanded = "true";
+      btn.textContent = "Свернуть";
+    }
+  }
+});
+
+// Обработчик клика по кнопке "Подробнее"
+// Обработчик клика с использованием data-атрибута для состояния
+document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("toggle-btn")) {
+    const btn = e.target;
+    const textSpan = btn.previousElementSibling;
+
+    // Получаем полный и сокращенный текст из data-атрибутов
+    const full = btn.dataset.full;
+    const short = btn.dataset.short;
+
+    // Проверяем текущее состояние по data-атрибуту или тексту кнопки
+    const isExpanded = btn.getAttribute("data-expanded") === "true";
+
+    if (!isExpanded) {
+      // Раскрываем текст
+      textSpan.textContent = full;
+      btn.textContent = "Скрыть";
+      btn.setAttribute("data-expanded", "true");
+    } else {
+      // Скрываем текст
+      textSpan.textContent = short;
+      btn.textContent = "Подробнее";
+      btn.setAttribute("data-expanded", "false");
+    }
+  }
+});
 
 const categoryFilter = document.getElementById("categoryFilter");
 

@@ -17,7 +17,7 @@ form.addEventListener("submit", async e => {
     });
 
     if (response.ok) {
-      status.innerHTML = '<div class="alert alert-success">Сообщение отправлено!</div>';
+      status.innerHTML = '<div class="alert alert-success fs-5">Сообщение отправлено! Спасибо за обращение! Скоро мы с Вами свяжемся.</div>';
       form.reset();
     } else {
       status.innerHTML = '<div class="alert alert-danger">Ошибка отправки. Попробуйте позже.</div>';
