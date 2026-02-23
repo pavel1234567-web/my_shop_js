@@ -10,7 +10,12 @@ const products = [
     "image": "public/img/products/1.png",
     "category": "Столы",
     "description": "Деревянный стул.",
-    "reviews": []
+    "reviews": [
+      {
+        "username": "user1",
+        "text": "очень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзыв"
+      }
+    ]
   },
   {
     "id": 5,
@@ -54,7 +59,12 @@ const products = [
     "image": "public/img/products/1.png",
     "category": "Столы",
     "description": "Деревянный стул.",
-    "reviews": []
+    "reviews": [
+      {
+        "username": "admin",
+        "text": "очень  хороший  отзывочень  хороший  отзывочень  хороший  отзывочень  хороший  отзыв"
+      }
+    ]
   },
   {
     "id": 8,
@@ -66,7 +76,7 @@ const products = [
     "article": "ART-005",
     "image": "public/img/products/2.png",
     "category": "Стулья",
-    "description": "Стол в стиле Loft.",
+    "description": "Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.Стол в стиле Loft.",
     "reviews": []
   }
 ];

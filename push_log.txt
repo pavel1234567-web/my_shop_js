@@ -182,3 +182,34 @@ To https://github.com/pavel1234567-web/my_shop_js.git
 =============================== 
 23.02.2026 16:08:54,24 
 Начало авто-обновления проекта 
+warning: in the working copy of 'push_log.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/css/bootstrap.min.css', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'public/js/bootstrap.bundle.min.js', LF will be replaced by CRLF the next time Git touches it
+[main 66d170f] auto_commit 23-02-2026_16-08
+ 25 files changed, 1641 insertions(+), 168 deletions(-)
+ create mode 100644 catalog.html
+ create mode 100644 contacts.html
+ create mode 100644 dostavka.html
+ create mode 100644 public/css/bootstrap.min.css
+ create mode 100644 public/css/style.css
+ create mode 100644 public/img/bg_catalog.png
+ create mode 100644 public/img/bg_contacts.png
+ create mode 100644 public/img/bg_image.png
+ create mode 100644 public/img/products/20180915_113204_000019_b6zsYnj.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h51m32s705.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h51m32s705_6MeMb7n.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h51m49s912.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h51m49s912_ceZz743.png
+ create mode 100644 public/img/products/vlcsnap-2024-09-11-18h51m49s912_xuTNMvw.png
+ create mode 100644 public/js/bootstrap.bundle.min.js
+ create mode 100644 public/js/grafics.js
+ create mode 100644 public/js/reviews.js
+ create mode 100644 public/js/reviewsData.js
+ create mode 100644 public/js/slick.js
+ create mode 100644 public/js/slider.js
+To https://github.com/pavel1234567-web/my_shop_js.git
+   b450128..66d170f  main -> main
+✔ Обновление завершено 
+=============================== 
+23.02.2026 16:18:24,77 
+Начало авто-обновления проекта 
